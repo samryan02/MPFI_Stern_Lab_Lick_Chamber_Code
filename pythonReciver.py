@@ -22,9 +22,15 @@ for ax in axs.flat:
 for ax in axs.flat:
     ax.label_outer()
 
+#get serial port
 print('Enter Serial Port:')
 serial_port = input()
 
+#get data file name
+print('Enter Data file name (please use .csv ending):')
+data_file = input()
+
+#create serial port
 ser = serial.Serial(serial_port)
 values = [0,0,0,0,0,0]
 data = np.zeros([1,6])
@@ -50,7 +56,7 @@ while True:
     axs[0, 1].scatter(time, values[2])
     axs[1, 0].scatter(time, values[3])
     axs[1, 1].scatter(time, values[4])  
-   
+    values[5] = time
     plt.pause(.1)
     #updtate total data array
     temp = np.asarray(values)
@@ -58,6 +64,6 @@ while True:
     
 print('end')
 #create CSV file
-savetxt('data.csv', data, delimiter=',')
+savetxt(data_file, data, delimiter=',')
 
 
