@@ -1,5 +1,5 @@
 #imports(only numpy, matplot lib, and serial must be installed, serial is installed as pyserial))
-import matplotlib.pyplot as plt
+
 import serial
 import re
 import csv
@@ -7,25 +7,7 @@ from numpy import asarray
 from numpy import savetxt
 import numpy as np
 
-#iniitalize plots
-fig, axs = plt.subplots(2, 4)
 
-axs[0, 0].set_title('Channel 1')
-axs[0, 1].set_title('Channel 2')
-axs[0, 2].set_title('Channel 3')
-axs[0, 3].set_title('Channel 4')
-axs[1, 0].set_title('Channel 5')
-axs[1, 1].set_title('Channel 6')
-axs[1, 2].set_title('Channel 7')
-axs[1, 3].set_title('Channel 8')
-
-#lable axis
-for ax in axs.flat:
-    ax.set(xlabel='time', ylabel='total number of licks')
-
-# Hide x labels and tick labels for top plots and y ticks for right plots.
-for ax in axs.flat:
-    ax.label_outer()
 
 #get serial port
 print('Enter First Serial Port:')
@@ -58,6 +40,7 @@ while True:
     formatedData1 = re.split(',',text1)
     formatedData2 = re.split(',',text2)
     
+    
 
     #enter the data into the array
     for i in range(len(formatedData1)):
@@ -68,17 +51,10 @@ while True:
     time1 = float(formatedData1[5].strip())/1000.0
     time2 = float(formatedData2[5].strip())/1000.0
     #update scatter plots
-    axs[0, 0].scatter(time1, values[1])
-    axs[0, 1].scatter(time1, values[2])
-    axs[0, 2].scatter(time1, values[3])
-    axs[0, 3].scatter(time1, values[4])
-    axs[1, 0].scatter(time2, values[7])
-    axs[1, 1].scatter(time2, values[8])
-    axs[1, 2].scatter(time2, values[9])
-    axs[1, 3].scatter(time2, values[10])  
+    print(values)
     values[5] = time1
     values[11] = time2
-    plt.pause(.1)
+   
     #updtate total data array
     temp = np.asarray(values)
     data = np.vstack([data, temp])
