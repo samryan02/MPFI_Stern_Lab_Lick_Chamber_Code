@@ -14,14 +14,18 @@ axs[0, 0].set_title('Channel 1')
 axs[0, 1].set_title('Channel 2')
 axs[1, 0].set_title('Channel 3')
 axs[1, 1].set_title('Channel 4')
-
+#lable axis
 for ax in axs.flat:
-    ax.set(xlabel='x-label', ylabel='y-label')
+    ax.set(xlabel='time', ylabel='total number of licks')
 
 # Hide x labels and tick labels for top plots and y ticks for right plots.
 for ax in axs.flat:
     ax.label_outer()
-ser = serial.Serial("COM3")
+
+print('Enter Serial Port:')
+serial_port = input()
+
+ser = serial.Serial(serial_port)
 values = [0,0,0,0,0,0]
 data = np.zeros([1,6])
 
