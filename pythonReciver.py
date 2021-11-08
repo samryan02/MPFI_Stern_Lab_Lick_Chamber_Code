@@ -1,5 +1,5 @@
 #imports(only numpy, matplot lib, and serial must be installed, serial is installed as pyserial))
-
+import serial.tools.list_ports
 import serial
 import re
 import csv
@@ -10,19 +10,20 @@ import numpy as np
 
 
 #get serial port
-print('Enter First Serial Port:')
-serial_port = input()
+port_names = []
+ports = list(serial.tools.list_ports.comports())
+for p in ports:
+    port_names.append(p.name)
 
-print('Enter Second Serial Port:')
-second_serial_port = input()
+ser1 = serial.Serial(port_names[0])
+ser2 = serial.Serial(port_names[1])
 
 #get data file name
 print('Enter Data file name (please use .csv ending):')
 data_file = input()
 
 #create serial port
-ser1 = serial.Serial(serial_port)
-ser2 = serial.Serial(second_serial_port)
+
 values = [0,0,0,0,0,0,0,0,0,0,0,0]
 data = np.zeros([1,12])
 
