@@ -3,7 +3,7 @@ import re
 
 class Arduino():
     
-
+    #class contstructor
     def __init__(self, commport):
         self.arduino = serial.Serial(commport)
         self.values = [0,0,0,0,0,0,0,0,0,0,0,0]

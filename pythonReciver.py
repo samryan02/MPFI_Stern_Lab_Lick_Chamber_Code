@@ -1,67 +1,76 @@
-#imports(only numpy, matplot lib, and serial must be installed, serial is installed as pyserial))
-import serial.tools.list_ports
+#library Imports
+import PySimpleGUI as sg
 import serial
-import re
-from numpy import asarray
+from serial.tools import list_ports #Needed for the automatic identication of serial adresses
+import Arduino
+from numpy import asarray, record
 from numpy import savetxt
 import numpy as np
+import time
 
+#Create Layout for GUI
+sg.theme('DarkAmber')
 
+layout = [[sg.Text("Lick Chamber Control")],
+        [sg.Text("Enter Experment length (in Minutes)"), sg.InputText()],
+        [sg.Text("Enter file name"), sg.InputText()],
+        [sg.Text("Enter number of Arduinos"), sg.InputText()],
+        [sg.Button("Begin Experiment")]
+]
 
-#get serial port
+window = sg.Window('Window Title', layout)
+
+event, values = window.read()    
+window.close()
+    
+print("value 1: ", values[0], "\n", "Value 2: ", values[1], "\n" ,"Value 2: ", values[2])
+
+#confirmation window
+sg.popup('Experiment Running')
+
+#automatic identification of serial porsts
 port_names = []
 ports = list(serial.tools.list_ports.comports())
 for p in ports:
     port_names.append(p.name)
 
-ser1 = serial.Serial(port_names[0])
+#creation of arduino object
+arduino1 = Arduino.Arduino(port_names[0])
 
+#creation of empty data array, first value = packet ID, values 2-11 = data for each channel, value 12 = time stamp
+data1 = [0,0,0,0,0,0,0,0,0,0,0,0]
 
-#get data file name
-print('Enter Data file name (please use .csv ending):')
-data_file = input()
-print(data_file)
-#create serial port
+#crate numpy array for saving data
+data = np.zeros([1,12])
 
-values = [0,0,0,0,0,0]
-data = np.zeros([1,6])
+#wait for start command signifing the arduino is ready to begin sending data
+startline = arduino1.getFirstByte()
+while(startline != True):
+    startline = arduino1.getFirstByte()
+    print(startline)
 
+#record time at which the experiment began
+start_time = time.time()
+
+#continouly read in data through the serial port
 while True:
-    #read serial data and strip it of it new line endigs
-    newData1 = ser1.readline().strip()
-    print(newData1)
-    #newData2 = ser2.readline().strip()
-    #translate form bytes to stings
-    text1 = newData1.decode('UTF-8')
-    #text2 = newData2.decode('UTF-8')
-    #if end command is read break from look
-    if(text1 == 'end'):
-       break
-    #split text array into indevidual values along the comas
-    formatedData1 = re.split(',',text1)
-    #formatedData2 = re.split(',',text2)
+    #read serial port
+    data1 = arduino1.getData()
     
-    
+    #create temporary numpy array
+    temp = np.asarray(data1)
 
-    #enter the data into the array
-    for i in range(len(formatedData1)):
-        values[i] = float(formatedData1[i].strip())
-    #for i in range(len(formatedData2)):
-    #    values[i+6] = float(formatedData2[i].strip())
-    #format time into seconds
-    time1 = float(formatedData1[5].strip())/1000.0
-    #time2 = float(formatedData2[5].strip())/1000.0
-    #update scatter plots
-    print(values)
-    values[5] = time1
-    #values[11] = time2
-   
-    #updtate total data array
-    temp = np.asarray(values)
+    #add temportay numpy array to the stack of data to be saved
     data = np.vstack([data, temp])
-    
+
+    #check if time has elapsed
+    if(time.time()-start_time > float(values[0])*60):
+        break
+
+    #debuging statment
+    print(data1)
+
+#indicate that the progam has ended    
 print('end')
-#create CSV file
-savetxt(data_file, data, delimiter=',')
-
-
+#create CSV file and save it
+savetxt(values[1], data, delimiter=',')
