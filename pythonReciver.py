@@ -14,7 +14,6 @@ sg.theme('DarkAmber')
 layout = [[sg.Text("Lick Chamber Control")],
         [sg.Text("Enter Experment length (in Minutes)"), sg.InputText()],
         [sg.Text("Enter file name"), sg.InputText()],
-        [sg.Text("Enter number of Arduinos"), sg.InputText()],
         [sg.Button("Begin Experiment")]
 ]
 
@@ -23,7 +22,9 @@ window = sg.Window('Window Title', layout)
 event, values = window.read()    
 window.close()
     
-print("value 1: ", values[0], "\n", "Value 2: ", values[1], "\n" ,"Value 2: ", values[2])
+print("value 1: ", values[0], "\n", "Value 2: ", values[1])
+minutes = values[0]
+files_name = values[1]
 
 #confirmation window
 sg.popup('Experiment Running')
@@ -56,10 +57,10 @@ start_time = time.time()
 while True:
     #read serial port
     data1 = arduino1.getData()
-    
+  
     #create temporary numpy array
     temp = np.asarray(data1)
-
+    
     #add temportay numpy array to the stack of data to be saved
     data = np.vstack([data, temp])
 
