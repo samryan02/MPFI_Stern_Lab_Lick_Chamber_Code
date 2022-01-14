@@ -35,7 +35,8 @@ sg.popup('Experiment Running')
 port_names = [] # create list to hold the port names of all arduinos connects
 ports = list(serial.tools.list_ports.comports()) #use serial tools to read all the port names
 for p in ports:
-    port_names.append(p.name) #add all ports to the list
+    if(p.description[0:3] == "USB"):
+        port_names.append(p.name) #add all ports to the list
 print(port_names)
 #creation of arduino object
 arduino1 = Arduino.Arduino(port_names[0]) #create arduino object from custom class
