@@ -19,7 +19,7 @@ layout = [[sg.Text("Lick Chamber Control")], #sets the title for the GUI
 ]
 
 window = sg.Window('Window Title', layout) # loads the GUI window
-
+#test
 event, values = window.read() #reads any inputs to the window
 window.close() # closes the window
     
