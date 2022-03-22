@@ -11,5 +11,14 @@ The Python code inputs the serial port as well as the file to which you would li
 
 This code will automaticly Identify the all arduinos plugged into the deivce However you will have to use the Graphical user interface to slect how many arduinos you would like to use, the length of the exeriment and the name of the file where you would like the data to be stored.
 
+Instructions for instalation(python Side):
+1. Clone the repository using the command: git clone https://github.com/samryan02/MPFI_Stern_Lab_Lick_Chamber_Code.git
+2. Install dependencies:
+  1. pip3 install PySimpleGUI
+  2. pip3 install pyserial
+  3. pip3 install numpy
+3. chose the file: if you are running one arduino use the oneArduino file, if you are using two use the standard pythonReciver.py file.
+
+  
 
 11/2/2021 version 1.2
